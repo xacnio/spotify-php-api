@@ -12,7 +12,7 @@ class SpotifyApi {
 	private $ClientID; 
 	private $ClientSecret;
 	private $RedirectURL;
-	const SCOPES = array(
+	private const SCOPES = array(
 		'ugc-image-upload','user-read-playback-state','user-modify-playback-state','user-read-currently-playing',
 		'streaming','app-remote-control','user-read-email','user-read-private','playlist-read-collaborative',
 		'playlist-modify-public','playlist-read-private','playlist-modify-private','user-library-modify',
@@ -22,43 +22,43 @@ class SpotifyApi {
 	function __construct() {
 
 	}
-	function setClientId($clientid)
+	public function setClientId($clientid)
 	{
-		$clientid = $this->clearIdSecret($clientid);
+		$clientid = self::clearIdSecret($clientid);
 		if(strlen($clientid) == 32)
 			$this->ClientID = $clientid;
 		else
 			throw new \Exception('Invalid client id.');
 	}
-	function setClientSecret($secret)
+	public function setClientSecret($secret)
 	{
-		$secret = $this->clearIdSecret($secret);
+		$secret = self::clearIdSecret($secret);
 		if(strlen($secret) == 32)
 			$this->ClientSecret = $secret;
 		else
 			throw new \Exception('Invalid client secret.');
 	}	
-	function setRedirectURL($url)
+	public function setRedirectURL($url)
 	{
 		if (filter_var($url, FILTER_VALIDATE_URL))
 			$this->RedirectURL = $url;
 		else
 			throw new \Exception('Invalid URL.');
 	}	
-	function checkVars()
+	private function checkVars()
 	{
 		if(!empty($this->RedirectURL) && !empty($this->ClientID) && !empty($this->ClientSecret))
 			return true;
 		return false;
 	}
-	function checkScopes($scopes)
+	private static function checkScopes($scopes)
 	{
 		if(!is_array($scopes)) return false;
 		foreach($scopes as $scope)
-			if(!in_array($scope, $this::SCOPES)) return false;
+			if(!in_array($scope, self::SCOPES)) return false;
 		return true;
 	}
-	function getUserAuthHref($inputScopes)
+	public function getUserAuthHref($inputScopes)
 	{
 		$scopes = array();
 		if(!empty($inputScopes))
@@ -72,18 +72,18 @@ class SpotifyApi {
 		( (count($scopes) > 0) ? '&scope=' . urlencode(implode(',', $scopes)) : '' ). '&redirect_uri=' . urlencode($this->RedirectURL);
 		return "";
 	}
-	function getTokens($code)
+	public  function getTokens($code)
 	{
 		if(!$this->checkVars()) throw new Exception('Required variable(s) not set.');
 		else
 		{
-			$code = $this->clearToken($code);
+			$code = self::clearToken($code);
 			$data = array(
 				'grant_type' => 'authorization_code',
 				'code' => $code,
 				'redirect_uri' => $this->RedirectURL
 			);
-			$result = $this->webRequest($data);
+			$result = self::webRequest($data);
 			if($result['success'] == false)
 			{
 				throw new Exception($result['error']);
@@ -94,17 +94,17 @@ class SpotifyApi {
 			}
 		}
 	}
-	function refreshToken($refreshToken)
+	public function refreshToken($refreshToken)
 	{
 		if(!$this->checkVars()) throw new Exception('Required variable(s) not set.');
 		else
 		{
-			$refreshToken = $this->clearToken($refreshToken);
+			$refreshToken = self::clearToken($refreshToken);
 			$data = array(
 				'grant_type' => 'refresh_token',
 				'refresh_token' => $refreshToken
 			);
-			$result = $this->webRequest($data);
+			$result = self::webRequest($data);
 			if($result['success'] == false)
 			{
 				throw new Exception($result['error']);
@@ -115,9 +115,9 @@ class SpotifyApi {
 			}
 		}		
 	}
-	function webRequestApi($urlSuffix, $authorization_code)
+	public static function webRequestApi($urlSuffix, $authorization_code)
 	{
-		$authorization_code = $this->clearToken($authorization_code);
+		$authorization_code = self::clearToken($authorization_code);
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://api.spotify.com'.$urlSuffix);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -145,7 +145,7 @@ class SpotifyApi {
 		curl_close($ch);
 		return $result;		
 	}
-	function webRequest($post)
+	private function webRequest($post)
 	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://accounts.spotify.com/api/token');
@@ -175,12 +175,13 @@ class SpotifyApi {
 		curl_close($ch);
 		return $result;		
 	}
-	function clearIdSecret($string)
+	private static function clearIdSecret($string)
 	{
 		return preg_replace("/[^a-z0-9]+/", "", $string);
 	}
-	function clearToken($token)
+	private static function clearToken($token)
 	{
 		return preg_replace("/[^a-zA-Z0-9_-]+/", "", $token);
 	}
 }
+?>
