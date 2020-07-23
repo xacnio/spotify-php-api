@@ -1,0 +1,22 @@
+{
+    "name": "alperencetin/spotify-php-api",
+    "description": "Spotify PHP Api",
+	"type": "package",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "alperencetin",
+            "email": "alperen@alperencetin.com"
+        }
+    ],
+	"prefer-stable": true,
+	"minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0"
+    },
+	"autoload": {
+        "psr-4": {
+			"SpotifyPHPApi\\": "src/"
+        }
+    }	
+}
