@@ -12,14 +12,15 @@ Download and use **src/Spotify.Api.php**
 
 ## Using
 **Via Composer**
-
-    require_once __DIR__ . '/vendor/autoload.php';
-    $spotifyApi = new SpotifyPHPApi\SpotifyApi();
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+$spotifyApi = new SpotifyPHPApi\SpotifyApi();
+```
 **Manual**
-
-    require_once('src/SpotifyApi.php');
-    $spotifyApi = new SpotifyPHPApi\SpotifyApi();
-
+```php
+require_once('src/SpotifyApi.php');
+$spotifyApi = new SpotifyPHPApi\SpotifyApi();
+```
 [Examples](tests)
 
 Examples are for private use. I recommend hide tokens variables for public use.
