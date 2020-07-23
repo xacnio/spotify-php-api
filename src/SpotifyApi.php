@@ -115,7 +115,7 @@ class SpotifyApi {
 			}
 		}		
 	}
-	public static function webRequestApi($urlSuffix, $authorization_code)
+	public static function webRequestApi($urlSuffix, $authorization_code, $post=array())
 	{
 		$authorization_code = self::clearToken($authorization_code);
 		$ch = curl_init();
@@ -126,6 +126,12 @@ class SpotifyApi {
 		$headers[] = 'Content-Type: application/json';
 		$headers[] = 'Authorization: Bearer '.$authorization_code;
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		if(is_array($post))
+		if(count($post) > 0)
+		{
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+		}
 
 		$result = curl_exec($ch);
 		if (curl_errno($ch)) {
