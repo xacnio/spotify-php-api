@@ -1,4 +1,12 @@
 <?php
+/*
+	***************************************************************************
+	*   Spotify Api for PHP
+	*   @package   spotify-php-api
+	*   @author    Alperen Çetin										
+	*   This code is licensed under MIT license (see LICENSE for details)
+	***************************************************************************
+*/
 namespace SpotifyPHPApi;
 class SpotifyApi {
 	private $ClientID; 
